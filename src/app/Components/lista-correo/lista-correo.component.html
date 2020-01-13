@@ -1,0 +1,24 @@
+<table>
+    <tr>
+        <td>Estado</td>
+        <td>Titulo</td>
+        <td>Cuerpo</td>
+        <td>Emisor</td>
+        <td>Comandos</td>
+    </tr>
+    <ng-container *ngFor="let correo of correos; index as i">
+        <tr>
+            <td>
+                <input type="radio" name="estado-{{i}}" [(ngModel)]="correo.estado" [value]="true" disabled>Leido
+                <input type="radio" name="estado-{{i}}" [(ngModel)]="correo.estado" [value]="false" disabled>No Leido
+            </td>
+            <td>{{correo.titulo}}</td>
+            <td>{{correo.cuerpo}}</td>
+            <td>{{correo.emisor}}</td>
+            <td>
+                <button (click)="responderCorreo(correo)">Responder</button>
+            </td>
+        </tr>
+        <app-enviar-correo *ngIf="correo.responder" [correo]="correo" (accion)="responderCorreo(correo)"></app-enviar-correo>
+    </ng-container>
+</table>

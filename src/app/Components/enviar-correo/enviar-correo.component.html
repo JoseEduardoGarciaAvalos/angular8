@@ -1,0 +1,28 @@
+<form [formGroup]="nuevoCorreo" (ngSubmit)="onSubmit()">
+    <div>
+        <label>Titulo: </label>
+        <input type="text" formControlName="titulo">
+        <div *ngIf="enviado && fnuevoCorreo.titulo.errors">
+            <p *ngIf="fnuevoCorreo.titulo.errors.required">Campo obligatorio</p>
+            <p *ngIf="fnuevoCorreo.titulo.errors.minlength">El campo debe tener al menos 3 caracteres</p>
+        </div>
+    </div>
+    <div>
+        <label>Cuerpo: </label>
+        <input type="text" formControlName="cuerpo">
+        <div *ngIf="enviado && fnuevoCorreo.cuerpo.errors">
+            <p *ngIf="fnuevoCorreo.cuerpo.errors.required">Campo obligatorio</p>
+            <p *ngIf="fnuevoCorreo.cuerpo.errors.minlength">El campo debe tener al menos 5 caracteres</p>
+        </div>
+    </div>
+    <div>
+        <label>Destinatario: </label>
+        <input type="text" formControlName="destinatario">
+        <div *ngIf="enviado && fnuevoCorreo.destinatario.errors">
+            <p *ngIf="fnuevoCorreo.destinatario.errors.required">Campo obligatorio</p>
+            <p *ngIf="fnuevoCorreo.destinatario.errors.email">El campo debe ser un correo válido</p>
+        </div>
+    </div>
+    <button>Enviar</button>
+    <button type="reset" (click)="onCancel()">Limpiar</button>
+</form>

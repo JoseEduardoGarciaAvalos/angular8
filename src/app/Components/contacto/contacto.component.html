@@ -1,0 +1,62 @@
+
+<form [formGroup]="formularioContacto" (onSubmit)="guardarContacto()">
+    <div>
+        <label for="nombre">Nombre: </label>
+        <input type="text" formControlName="nombre">
+        <ng-container *ngIf="fContacto.nombre.errors && fContacto.nombre.touched">
+            <p *ngIf="fContacto.nombre.errors.required">
+                El campo es requerido.
+            </p>
+        </ng-container>
+    </div>
+    <div>
+        <label for="foto">Fotografía: </label>
+        <img [src]="fContacto.foto.value" alt="">
+        <input type="file" (change)="actualizarFoto($event)">
+    </div>
+    <div formArrayName="telefonos">
+        Telefonos:
+        <div *ngFor="let telefono of fTelefonos; index as i"
+         [formGroupName]="i">
+            <label for="telefono">Telefono {{i+1}}: </label>
+            <select formControlName="tipo">
+                <option [value]="tipo" *ngFor="let tipo of tipoTelefono" >{{tipo}}</option>
+            </select>
+            <input type="tel"  formControlName="numero">
+            <button *ngIf="i!=0" (click)="eliminarTelefono(i)">Eliminar</button>
+            <ng-container *ngIf="fTelefonos[i].controls.numero.errors && fTelefonos[i].controls.numero.touched">
+                <p *ngIf="fTelefonos[i].controls.numero.errors.pattern">
+                    El campo debe tener el siguiente formato XXXX-XXXX
+                </p>
+            </ng-container>
+        </div>
+        <button (click)="agregarTelefono()">Agregar Telefono</button>
+        <button (click)="eliminarTelefonos()" [disabled]="!fTelefonos[0].dirty && fTelefonos.length <= 1">Eliminar Telefonos</button>
+    </div>
+    <div>
+        <label for="correo">Correo: </label>
+        <input type="email" formControlName="correo">
+        <ng-container *ngIf="fContacto.correo.errors && fContacto.correo.touched">
+            <p *ngIf="fContacto.correo.errors.email">
+                Este campo debe tener un formato de correo válido.
+            </p>
+        </ng-container>
+    </div>
+    <div>
+        <label for="direccion">Dirección: </label>
+        <input type="text" formControlName="direccion">
+    </div>
+    <div>
+        <label for="departamento">Departamento: </label>
+        <select formControlName="departamento" (change)="cambiarDepartamento()">
+            <option [value]="i" *ngFor="let departamento of constantes.Departamentos; index as i">{{departamento}}</option>
+        </select>
+    </div>
+    <div>
+        <label for="municipio">Municipios: </label>
+        <select formControlName="municipio">
+            <option [value]="i" *ngFor="let municipio of constantes.Municipios[fContacto.departamento.value]; index as i">{{municipio}}</option>
+        </select>
+    </div>
+    <button [disabled]="formularioContacto.invalid">Guardar</button>
+</form>

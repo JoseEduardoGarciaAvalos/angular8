@@ -1,0 +1,67 @@
+<form [formGroup]="fContacto" (ngSubmit)="guardarContacto()" *ngIf="fContacto.controls as c; let c">
+
+    <div>
+        <label for="nombre">Nombre: </label>
+        <input type="text" formControlName="nombre">
+
+        <ng-container *ngIf="c.nombre.errors && c.nombre.touched">
+            <p *ngIf="c.nombre.errors.required">
+                El campo es obligatorio
+            </p>
+        </ng-container>
+    </div>
+    <div>
+        <label for="foto">Foto: </label>
+        <img [src]="fContacto.value.foto" alt="">
+        <input type="file" accept=".jpg,.png,.gif" (change)="cargarImagen($event)">
+    </div>
+    <div formArrayName="telefonos">
+        Teléfonos:
+        <div *ngFor="let telefono of fTelefonos.controls; index as i" [formGroupName]="i">
+            <select name="tipo" id="tipo" formControlName="tipo">
+                <option [value]="tipo" *ngFor="let tipo of constantes.telefono">{{tipo}}</option>
+            </select>
+            <input type="tel" formControlName="numero">
+            <button *ngIf="i!=0" (click)="eliminarTelefono(i)">Eliminar</button>
+            <button *ngIf="i==0" (click)="eliminarTelefono(i)" [disabled]="!telefono.dirty">Limpiar</button>
+            <ng-container *ngIf="telefono.controls as t; let t">
+                <ng-container *ngIf="t.numero.errors && t.numero.touched">
+                    <p *ngIf="t.numero.errors.pattern">
+                        El campo debe tener el formato XXXX-XXXX
+                    </p>
+                </ng-container>
+            </ng-container>
+        </div>
+        <button (click)="agregarTelefono()" [disabled]="fTelefonos.controls.length>=10">Agregar Teléfono</button>
+        <button (click)="eliminarTelefonos()" [disabled]="fTelefonos.controls.length<=1">Eliminar Teléfonos</button>
+    </div>
+    <div>
+        <label for="correo">Correo: </label>
+        <input type="text" formControlName="correo">
+        <ng-container *ngIf="c.correo.errors && c.correo.touched">
+            <p *ngIf="c.correo.errors.email">
+                El campo no tiene el formato de correo válido.
+            </p>
+        </ng-container>
+    </div>
+    <div>
+        <label for="direccion">Dirección: </label>
+        <input type="text" formControlName="direccion">
+    </div>
+    <div>
+        <label for="departamento">Departamento: </label>
+        <select name="departamento" id="departamento" formControlName="departamento" (change)="resetearMunicipio()">
+            <option [value]="i" *ngFor="let dep of constantes.departamentos;index as i" >{{dep}}</option>
+        </select>
+    </div>
+    <div>
+        <label for="municipio">Municipio: </label>
+        <select name="municipio" id="municipio" formControlName="municipio">
+            <option [value]="i" *ngFor="let mun of constantes.municipios[fContacto.value.departamento];index as i">
+                {{mun}}</option>
+        </select>
+    </div>
+    <button [disabled]="fContacto.invalid">Guardar</button>
+</form>
+
+<pre>{{fContacto.value | json}}</pre>

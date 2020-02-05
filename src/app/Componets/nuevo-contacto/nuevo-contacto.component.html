@@ -1,0 +1,66 @@
+<form [formGroup]="fContacto">
+    <div>
+        <label for="nombre">Nombre: </label>
+        <input type="text" formControlName="nombre">
+        <ng-container *ngIf="fcc.nombre.errors && fcc.nombre.touched">
+            <p  *ngIf="fcc.nombre.errors.required">
+                El campo es obligatorio
+            </p>
+        </ng-container>
+    </div>
+    <div>
+        <label for="foto">Foto: </label>
+        <img [src]="fcv.foto" alt="Avatar">
+        <input type="file" (change)="cargarFoto($event)">
+    </div>
+    <div>
+        <label for="correo">Correo: </label>
+        <input type="email" formControlName="correo">
+        <ng-container *ngIf="fcc.correo.errors && fcc.correo.touched">
+            <p *ngIf="fcc.correo.errors.email">
+                El campo no tiene formato de correo
+            </p>
+        </ng-container>
+    </div>
+    <div formArrayName="telefonos">
+        Telefonos: 
+        <div [formGroupName]="i" *ngFor="let telefono of ftc; index as i">
+            Telefono {{i+1}}: 
+            <select name="tipo" formControlName="tipo">
+                <option value="{{j}}" *ngFor="let valor of constantes.telefonos; index as j">{{valor}}</option>
+            </select>
+            <input type="tel" formControlName="numero">
+            <button (click)="eliminarTelefono(i)" *ngIf="i!=0">Eliminar Teléfono</button>
+            <ng-container *ngIf="telefono.controls.numero.errors && telefono.controls.numero.touched">
+                <p *ngIf="telefono.controls.numero.errors.pattern">
+                    El campo debe tener el formato: XXXX-XXXX
+                </p>
+            </ng-container>
+            <ng-container *ngIf="telefono.controls.numero.errors && (telefono.touched || telefono.controls.tipo.touched)">
+                <p *ngIf="telefono.controls.numero.errors.verificarTelefono">
+                    {{telefono.controls.numero.errors.verificarTelefono.value}}
+                </p>
+            </ng-container>
+        </div>
+        <button (click)="agregarTelefono()">Agregar Teléfono</button>
+    </div>
+    <div>
+        <label for="direccion">Dirección: </label>
+        <input type="text" formControlName="direccion">
+    </div>
+    <div>
+        <label for="departamento">Departamento: </label>
+        <select name="departamento" formControlName="departamento">
+            <option value="{{i}}" *ngFor="let valor of constantes.departamentos; index as i">{{valor}}</option>
+        </select>
+    </div>
+    <div>
+        <label for="municipio">Municipio: </label>
+        <select name="municipio" formControlName="municipio">
+            <option value="{{i}}" *ngFor="let valor of constantes.municipios[fcv.departamento]; index as i">{{valor}}</option>
+        </select>
+    </div>
+</form>
+
+<button (click)="ver()">Depurar</button> {{ fContacto.status}}
+<pre> {{ fcv | json}}</pre>
